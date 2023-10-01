@@ -1,0 +1,25 @@
+{
+  "name": "02_academlomotors",
+  "version": "1.0.0",
+  "description": "api for motorcycle repair local appointments",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start:dev": "nodemon ./src/server.js"
+  },
+  "keywords": [
+    "motorcycle",
+    "academlo"
+  ],
+  "author": "guskumite",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "env-var": "^7.4.1",
+    "express": "^4.18.2",
+    "nodemon": "^3.0.1",
+    "pg": "^8.11.3",
+    "sequelize": "^6.33.0",
+    "zod": "^3.22.2"
+  }
+}
