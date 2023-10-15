@@ -22,8 +22,8 @@ export class RepairService {
     return await Repair.create(data);
   }
 
-  async updateRepair(repair, data) {
-    return await repair.update({ status: "completed" });
+  async updateRepair(repair, who) {
+    return await repair.update({ status: `completed by ${who}` });
   }
 
   async deleteRepair(repair, who) {

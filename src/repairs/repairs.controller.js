@@ -81,24 +81,14 @@ export const deleteRepair = async (req, res) => {
 export const updateRepair = async (req, res) => {
   try {
     const { repair } = req;
-
     if (repair.dataValues.status !== "pending") {
-      let myError = `The id ${repair.dataValues.id} is not in pending status, therefore, it cannot be updated`;
+      let myError = `The id ${repair.dataValues.id} is not in pending status, therefore it can not be updated`;
       return res.status(500).json(myError);
     }
 
-    const { hasError, errorMessages, dataRepair } = validateRepair(req.body);
+    await repairService.updateRepair(repair, req.sessionUser.id);
 
-    if (hasError) {
-      return res.status(422).json({
-        status: "error",
-        message: errorMessages,
-      });
-    }
-
-    const repairUpdated = await repairService.updateRepair(repair, dataRepair);
-
-    return res.status(200).json(repairUpdated);
+    return res.status(204).json(null);
   } catch (error) {
     return res.status(500).json(error);
   }

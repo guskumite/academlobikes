@@ -8,12 +8,21 @@ import {
   deleteUser,
 } from "./users.controller.js";
 import { protect, restrictTo } from "./users.middleware.js";
+import { userValidationRules, validate } from "../errors/validator.js";
 
 export const router = express.Router();
 
 router.post("/login", login);
 
-router.post("/register", protect, restrictTo("developer"), register);
+router.post(
+  "/register",
+  userValidationRules(),
+  validate,
+  protect,
+  restrictTo("developer"),
+  register
+);
+
 // for initial superuser creation
 //router.post("/register", register);
 

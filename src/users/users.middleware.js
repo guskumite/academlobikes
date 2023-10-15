@@ -17,7 +17,7 @@ export const protect = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   }
 
-  //2. validad si el token existe
+  //2. validar si el token existe
   if (!token) {
     return next(
       new AppError("You are not logged in!, Please log in to get access", 401)
@@ -36,7 +36,7 @@ export const protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  //5. validar si el usuario cambio la contrase recientemente, si es asi enviar un error
+  //5. validar si el usuario cambio la contraseña recientemente, si es asi enviar un error
   if (user.chagedPasswordAt) {
     const changedTimeStamp = parseInt(
       user.chagedPasswordAt.getTime() / 1000,
