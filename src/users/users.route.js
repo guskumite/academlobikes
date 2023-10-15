@@ -1,20 +1,23 @@
-import { Router } from "express";
+import express from "express";
 import {
+  login,
+  register,
+  changePassword,
   findAllUsers,
-  createUser,
   findOneUser,
-  updateUser,
   deleteUser,
 } from "./users.controller.js";
+import { protect, restrictTo } from "./users.middleware.js";
 
-import { validateExistUser } from "./users.middleware.js";
+export const router = express.Router();
 
-export const router = Router();
+router.post("/login", login);
 
-router.route("/").get(findAllUsers).post(createUser);
+router.post("/register", protect, restrictTo("developer"), register);
+// for initial superuser creation
+//router.post("/register", register);
 
-router
-  .route("/:id")
-  .get(validateExistUser, findOneUser)
-  .patch(validateExistUser, updateUser)
-  .delete(validateExistUser, deleteUser);
+router.patch("/change-password", protect, changePassword);
+router.get("/", protect, findAllUsers);
+router.route("/:id").get(protect, restrictTo("developer"), findOneUser);
+router.route("/:id").delete(protect, restrictTo("developer"), deleteUser);

@@ -29,12 +29,9 @@ export const findOneRepair = async (req, res) => {
 
 export const createRepair = async (req, res) => {
   try {
-    /* const { hasError, errorMessages, repairData } = validateRepair(req.body); */
+    req.body.userid = req.sessionUser.id;
+    const { hasError, errorMessages, repairData } = validateRepair(req.body);
 
-    /* it is pending to validate how to correctly code the date to be validated */
-    /* no supe como validar el campo de fecha */
-
-    const hasError = false;
     if (hasError) {
       return res.status(422).json({
         status: "error",
@@ -73,7 +70,7 @@ export const deleteRepair = async (req, res) => {
       return res.status(500).json(myError);
     }
 
-    await repairService.deleteRepair(repair);
+    await repairService.deleteRepair(repair, req.sessionUser.id);
 
     return res.status(204).json(null);
   } catch (error) {

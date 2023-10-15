@@ -21,7 +21,22 @@ const Repair = sequelize.define("repair", {
   status: {
     type: DataTypes.STRING(20),
     allowNull: false,
+    field: "status",
     defaultValue: "pending",
+  },
+
+  motorsNumber: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: -1,
+    field: "motors_number",
+  },
+
+  description: {
+    type: DataTypes.STRING(55),
+    allowNull: false,
+    defaultValue: "/",
+    field: "description",
   },
 
   userid: {

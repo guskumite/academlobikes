@@ -8,13 +8,38 @@ import {
 } from "./repairs.controller.js";
 
 import { validateExistRepair } from "./repairs.middleware.js";
+import { protect, restrictTo } from "../users/users.middleware.js";
 
 export const router = Router();
 
-router.route("/").get(findAllRepairs).post(createRepair);
+router
+  .route("/")
+  .get(protect, restrictTo("employee"), findAllRepairs)
+  .post(protect, restrictTo("employee"), createRepair);
 
 router
   .route("/:id")
-  .get(validateExistRepair, findOneRepair)
-  .patch(validateExistRepair, updateRepair)
-  .delete(validateExistRepair, deleteRepair);
+  .get(
+    protect,
+    restrictTo("employee"),
+    validateExistRepair,
+    protect,
+    restrictTo("employee"),
+    findOneRepair
+  )
+  .patch(
+    protect,
+    restrictTo("employee"),
+    validateExistRepair,
+    protect,
+    restrictTo("employee"),
+    updateRepair
+  )
+  .delete(
+    protect,
+    restrictTo("employee"),
+    validateExistRepair,
+    protect,
+    restrictTo("employee"),
+    deleteRepair
+  );
