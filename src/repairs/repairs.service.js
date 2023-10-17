@@ -1,11 +1,21 @@
 import Repair from "./repairs.model.js";
+import { Op } from "sequelize";
+import user from "../users/users.model.js";
 
 export class RepairService {
   async findAllRepairs() {
     return await Repair.findAll({
       where: {
-        status: "pending",
+        status: { [Op.like]: { [Op.any]: ["completed%", "pending"] } },
       },
+      attributes: { exclude: ["userid", "user_id"] },
+      include: [
+        {
+          model: user,
+          as: "repairUser",
+          attributes: ["name", "email"],
+        },
+      ],
     });
   }
 
@@ -13,8 +23,16 @@ export class RepairService {
     return await Repair.findOne({
       where: {
         id,
-        status: "pending",
+        status: { [Op.like]: { [Op.any]: ["completed%", "pending"] } },
       },
+      attributes: { exclude: ["userid", "user_id"] },
+      include: [
+        {
+          model: user,
+          as: "repairUser",
+          attributes: ["name", "email"],
+        },
+      ],
     });
   }
 

@@ -16,8 +16,10 @@ export const findAllRepairs = async (req, res) => {
 export const findOneRepair = async (req, res) => {
   try {
     const { repair } = req;
-    if (repair.dataValues.status !== "pending") {
-      let myError = `The id ${repair.dataValues.id} is not in pending status`;
+    if (
+      !["pending", "completed"].includes(repair.dataValues.status.split(" ")[0])
+    ) {
+      let myError = `The id ${repair.dataValues.id} is not in pending or completed status`;
       return res.status(500).json(myError);
     }
 

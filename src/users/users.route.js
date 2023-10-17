@@ -6,6 +6,8 @@ import {
   findAllUsers,
   findOneUser,
   deleteUser,
+  deletemyUser,
+  updatemyUser,
 } from "./users.controller.js";
 import { protect, restrictTo } from "./users.middleware.js";
 import { userValidationRules, validate } from "../errors/validator.js";
@@ -27,6 +29,30 @@ router.post(
 //router.post("/register", register);
 
 router.patch("/change-password", protect, changePassword);
-router.get("/", protect, findAllUsers);
-router.route("/:id").get(protect, restrictTo("developer"), findOneUser);
-router.route("/:id").delete(protect, restrictTo("developer"), deleteUser);
+router.delete(
+  "/delete-user",
+  protect,
+  restrictTo("developer", "manager"),
+  deleteUser
+);
+router.get("/", protect, restrictTo("developer", "manager"), findAllUsers);
+router
+  .route("/:id")
+  .get(
+    protect,
+    restrictTo("developer", "receptionist", "admin", "manager", "employee"),
+    findOneUser
+  )
+  .patch(
+    protect,
+    restrictTo("developer", "receptionist", "admin", "manager", "employee"),
+    updatemyUser
+  )
+  .delete(
+    protect,
+    restrictTo("developer", "receptionist", "admin", "manager", "employee"),
+    deletemyUser
+  );
+
+/*  .delete(protect, restrictTo("developer", "manager"), deleteUser) */
+/* router.route("/:id").patch(updatemyUser).delete(deletemyUser); */

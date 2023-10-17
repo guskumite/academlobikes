@@ -102,7 +102,7 @@ export const changePassword = catchAsync(async (req, res, next) => {
 
   await authService.updateUser(sessionUser, {
     password: hashedNewPassword,
-    chagedPasswordAt: new Date(),
+    changedPasswordAt: new Date(),
   });
 
   return res.status(200).json({
@@ -131,6 +131,55 @@ export const findOneUser = async (req, res) => {
     }
 
     return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+export const updatemyUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { sessionUser } = req;
+    if (id !== sessionUser.id) {
+      let myError = `The id ${sessionUser.id} is the id of the current user, modify other users are not allowed`;
+      return res.status(500).json(myError);
+    }
+    const user = await authService.findOneUserById(sessionUser.id);
+    if (user.dataValues.status !== "available") {
+      let myError = `The id ${user.dataValues.id} does not exist on db, therefore, it cannot be modified`;
+      return res.status(500).json(myError);
+    }
+
+    await authService.updateUser(sessionUser, {
+      name: req.name,
+      email: req.email,
+    });
+
+    return res.status(200).json({
+      message: "The user password has been updated successfully",
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+export const deletemyUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { sessionUser } = req;
+    if (id !== sessionUser.id) {
+      let myError = `The id ${sessionUser.id} is the id of the current user, delete other users are not allowed`;
+      return res.status(500).json(myError);
+    }
+    const user = await authService.findOneUserById(sessionUser.id);
+
+    if (user.dataValues.status !== "available") {
+      let myError = `The id ${user.dataValues.id} does not exist on db, therefore, it cannot be deleted`;
+      return res.status(500).json(myError);
+    }
+
+    await authService.deleteUser(user);
+    return res.status(204).json(null);
   } catch (error) {
     return res.status(500).json(error);
   }
