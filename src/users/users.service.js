@@ -36,8 +36,8 @@ export class AuthService {
     return await User.create(data);
   }
 
-  async updateUser(user, data) {
-    return await user.update(data);
+  async updateUser(user, name, email) {
+    return await user.update({ name: name, email: email });
   }
 
   async deleteUser(user) {

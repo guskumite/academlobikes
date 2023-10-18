@@ -140,23 +140,25 @@ export const updatemyUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { sessionUser } = req;
-    if (id !== sessionUser.id) {
-      let myError = `The id ${sessionUser.id} is the id of the current user, modify other users are not allowed`;
-      return res.status(500).json(myError);
-    }
+
     const user = await authService.findOneUserById(sessionUser.id);
     if (user.dataValues.status !== "available") {
       let myError = `The id ${user.dataValues.id} does not exist on db, therefore, it cannot be modified`;
       return res.status(500).json(myError);
     }
 
-    await authService.updateUser(sessionUser, {
-      name: req.name,
-      email: req.email,
-    });
+    const { name } = req.body || sessionUser.dataValues.name;
+    const { email } = req.body || sessionUser.dataValues.email;
+
+    if (id !== user.id) {
+      let myError = `The id ${id} is not the id of the current user, therefore it cannot be modified. try id ${user.id} instead.`;
+      return res.status(500).json(myError);
+    }
+
+    await authService.updateUser(user, name, email);
 
     return res.status(200).json({
-      message: "The user password has been updated successfully",
+      message: "The user has been updated successfully",
     });
   } catch (error) {
     return res.status(500).json(error);
@@ -167,10 +169,7 @@ export const deletemyUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { sessionUser } = req;
-    if (id !== sessionUser.id) {
-      let myError = `The id ${sessionUser.id} is the id of the current user, delete other users are not allowed`;
-      return res.status(500).json(myError);
-    }
+
     const user = await authService.findOneUserById(sessionUser.id);
 
     if (user.dataValues.status !== "available") {
