@@ -177,6 +177,11 @@ export const deletemyUser = async (req, res) => {
       return res.status(500).json(myError);
     }
 
+    if (id.toString() !== user.id.toString()) {
+      let myError = `The id ${id} is not the id of the current user, therefore it cannot be modified. try id ${user.id} instead.`;
+      return res.status(500).json(myError);
+    }
+
     await authService.deleteUser(user);
     return res.status(204).json(null);
   } catch (error) {
