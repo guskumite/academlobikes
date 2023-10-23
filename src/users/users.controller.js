@@ -98,10 +98,11 @@ export const changePassword = catchAsync(async (req, res, next) => {
   }
 
   //5. encriptar la nueva contraseña
-  const hashedNewPassword = await encryptedPassword(newPassword);
+  // const hashedNewPassword = await encryptedPassword(newPassword);
+  // ( se puede cifrar en el beforeUpdate del hooks del user model)
 
   await authService.updateUser(sessionUser, {
-    password: hashedNewPassword,
+    password: newPassword,
     changedPasswordAt: new Date(),
   });
 
