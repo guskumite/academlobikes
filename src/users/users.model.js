@@ -49,6 +49,9 @@ const User = sequelize.define(
       beforeCreate: async (user) => {
         user.password = await encryptedPassword(user.password);
       },
+      beforeUpdate: async (user) => {
+        user.password = await encryptedPassword(user.password);
+      },
     },
   }
 );
